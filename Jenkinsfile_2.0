@@ -1,0 +1,125 @@
+node {
+    
+    def mvn_version = 'MAVEN_HOME'
+           def uploadSpec = """{
+           "files": [
+               {
+               "pattern": "target/BSP-SNAPSHOT-1.1.${BUILD_NUMBER}.war",
+                   "target": "libs-snapshot-local/com/workout/BSP/1.0.${BUILD_NUMBER}-SNAPSHOT/"
+               }
+               ]
+           }"""
+               try {
+                  notifyBuild('STARTED')
+                  stage('CheckOut From GIT'){
+        git 'https://topgear-training-gitlab.wipro.com/BH371006/WorkFinalOut_Groovy'
+        echo '*************CheckedOut from GIT Successfully*************'
+    }
+    
+    stage('SonarQube PreBuild Analysis'){
+        def mvnHome = tool name: 'MAVEN_HOME', type: 'maven'
+        withSonarQubeEnv('scan') {
+            sh "${mvnHome}/bin/mvn sonar:sonar -Dsonar.projectName=WorkOutQuality${BUILD_NUMBER} -Dv=${BUILD_NUMBER}"
+            echo '*************Prebuild Analysis was Successful************'
+        }
+    }
+    stage('Compile-Package'){
+        def mvnHome = tool name: 'MAVEN_HOME', type: 'maven'
+        sh "${mvnHome}/bin/mvn compile"
+        echo '*************Compiled Successfully*************'
+    }
+    
+    stage('Test-Package'){
+        def mvnHome = tool name: 'MAVEN_HOME', type: 'maven'
+        sh "${mvnHome}/bin/mvn test"
+        echo '*************Tested Successfully**************'
+    }
+    
+    stage('Building WAR file'){
+        def mvnHome = tool name: 'MAVEN_HOME', type: 'maven'
+        sh "${mvnHome}/bin/mvn install -U -DskipTests -Dmaven.main.skip -Dv=${BUILD_NUMBER}"
+        echo '*************Build WAR Successfully*************'
+    }
+    stage('SonarQube PostBuild Analysis'){
+        def mvnHome = tool name: 'MAVEN_HOME', type: 'maven'
+        withSonarQubeEnv('scan') {
+            sh "${mvnHome}/bin/mvn sonar:sonar -Dsonar.projectName=WorkOutQuality${BUILD_NUMBER} -Dv=${BUILD_NUMBER}"
+            echo '*************Postbuild Analysis was Successful*************'
+        }
+    }
+    stage("Quality Gate Check"){
+          timeout(time: 1, unit: 'HOURS') {
+              def qg = waitForQualityGate()
+              if (qg.status != 'OK') {
+                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                  echo '*************Quality Gate Check was Successful*************' 
+              }
+          }
+      }
+               stage('Uploading to Artifactory') {
+               withEnv( ["PATH+MAVEN=${tool mvn_version}/bin/"] ) {
+                                 script {
+                                        def server = Artifactory.server 'artifact' 
+                                        server.bypassProxy = true
+                                        def buildInfo = server.upload spec: uploadSpec
+                                        echo '*************Uploaded artifacts to Artifactory was Successful*************'
+                                        }
+                    }
+                
+}
+                stage('Download Artifacts') {
+                    script {
+                        sh "rm -rf /home/osgdev/BSP/Artifacts/*.war"
+                        echo '*********Removed the Old WAR files*********'
+         sh "wget http://10.199.7.220:5040/artifactory/libs-snapshot-local/com/workout/BSP/1.0.${BUILD_NUMBER}-SNAPSHOT/BSP-SNAPSHOT-1.1.${BUILD_NUMBER}.war -P /home/osgdev/BSP/Artifacts"
+         echo '**********Artifacts Downloaded Successfully**********'
+    }
+}
+
+}
+ catch (e) {
+    // If there was an exception thrown, the build failed
+    currentBuild.result = "FAILED"
+    throw e
+  } finally {
+    // Success or failure, always send notifications
+    notifyBuild(currentBuild.result)
+    gitlabCommitStatus {
+       // The result of steps within this block is what will be sent to GitLab
+       echo "Commit Status to Gitlab"
+    }
+  }
+  
+}
+   def notifyBuild(String buildStatus = 'STARTED') {
+  // build status of null means successful
+  buildStatus =  buildStatus ?: 'SUCCESSFUL'
+  gitlabCommitStatus {
+       // The result of steps within this block is what will be sent to GitLab
+       echo "***************Commit Status to Gitlab*****************"
+    }
+
+  // Default values
+  def colorName = 'RED'
+  def colorCode = '#FF0000'
+  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+  def summary = "${subject} (${env.BUILD_URL})"
+
+  // Override default values based on build status
+  if (buildStatus == 'STARTED') {
+    color = 'YELLOW'
+    colorCode = '#FFFF00'
+  } else if (buildStatus == 'SUCCESSFUL') {
+    color = 'GREEN'
+    colorCode = '#00FF00'
+  } else if (buildStatus == 'UNSTABLE') {
+    color = 'warning'
+    colorCode = '#ffae42'
+  } else {
+    color = 'RED'
+    colorCode = '#FF0000'
+  }
+
+  // Send notifications
+ slackSend (color: colorCode, message: summary)
+}
