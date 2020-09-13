@@ -56,7 +56,7 @@ public void TestRun()
     chromeOptions.addArguments("--no-sandbox");
     chromeOptions.addArguments("--disable-dev-shm-usage");
     WebDriver driver = new ChromeDriver(chromeOptions);
-	driver.get("http://localhost:8080/WorkOutFinal/");
+	driver.get("http://13.233.48.128:9090/WorkOutFinal/");
 	System.out.println(driver.getTitle()); //Titel of the webpage
 	driver.findElement(By.id("userName")).sendKeys("bsp@demo.com"); //Enter the email
 	driver.findElement(By.id("userPw")).sendKeys("bsp"); //Enter the Password 
