@@ -50,7 +50,7 @@ public void TestRun()
         driver = new FirefoxDriver(firefoxOptions);*/
 
 	//driver = new FirefoxDriver(firefoxOptions);
-	System.setProperty("webdriver.chrome.driver", "./Driver/chromedriver");
+	System.setProperty("webdriver.chrome.driver", "./Driver/chromedriver.exe");
     ChromeOptions chromeOptions = new ChromeOptions();
     chromeOptions.addArguments("--headless");
     chromeOptions.addArguments("--no-sandbox");
@@ -89,7 +89,7 @@ public void SignUp()
     chromeOptions.addArguments("--no-sandbox");
     chromeOptions.addArguments("--disable-dev-shm-usage");
     WebDriver driver = new ChromeDriver(chromeOptions);
-	driver.get("http://localhost:8080/WorkOutFinal/Signup.jsp?");
+	driver.get("http://13.233.48.128:9090/WorkOutFinal/Signup.jsp?");
 	System.out.println(driver.getTitle());
 	assertTrue(driver.getPageSource().contains("Workout Tracker"));
 	System.out.println("*************" + driver.getTitle() + "*************");
