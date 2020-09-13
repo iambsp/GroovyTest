@@ -50,7 +50,7 @@ public void TestRun()
         driver = new FirefoxDriver(firefoxOptions);*/
 
 	//driver = new FirefoxDriver(firefoxOptions);
-	System.setProperty("webdriver.chrome.driver", "./Driver/chromedriver.exe");
+	System.setProperty("webdriver.chrome.driver", "./Driver/chromedriver");
 	//WebDriver driver= new ChromeDriver(new ChromeDriverService.Builder().usingPort(65530).build());
     ChromeOptions chromeOptions = new ChromeOptions();
     chromeOptions.addArguments("--headless");
