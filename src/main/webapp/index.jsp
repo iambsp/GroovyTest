@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Welcome to the Workout Login</title>
+<title>Welcome to the Workout Home</title>
 
 
 <style>
