@@ -57,7 +57,7 @@ public void TestRun()
     chromeOptions.addArguments("--no-sandbox");
     chromeOptions.addArguments("--disable-dev-shm-usage");
     WebDriver driver = new ChromeDriver(chromeOptions);
-	driver.get("http://13.233.48.128:9090/WorkOutFinal/");
+	driver.get("http://13.233.48.128:9090/WorkOut/index.jsp");
 	System.out.println(driver.getTitle()); //Titel of the webpage
 	driver.findElement(By.id("userName")).sendKeys("bsp@demo.com"); //Enter the email
 	driver.findElement(By.id("userPw")).sendKeys("bsp"); //Enter the Password 
@@ -90,7 +90,7 @@ public void SignUp()
     chromeOptions.addArguments("--no-sandbox");
     chromeOptions.addArguments("--disable-dev-shm-usage");
     WebDriver driver = new ChromeDriver(chromeOptions);
-	driver.get("http://13.233.48.128:9090/WorkOutFinal/Signup.jsp?");
+	driver.get("http://13.233.48.128:9090/WorkOut/Signup.jsp?");
 	System.out.println(driver.getTitle());
 	assertTrue(driver.getPageSource().contains("Workout Tracker"));
 	System.out.println("*************" + driver.getTitle() + "*************");
