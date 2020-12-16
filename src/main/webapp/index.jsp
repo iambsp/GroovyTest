@@ -84,7 +84,7 @@ input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
   <form name="workout" class="container" >
    
   <form id="login-form"> 
-            <label for="email"><font color="white"><b>Please Enter Email / UserName</b></font></label>
+            <label for="email"><font color="white"><b>Please Enter Your Email / UserName</b></font></label>
             <input id="userName" type="text" placeholder="Enter Email / UserName" value=""/>
             <label for="password"><font color="white"><b>Password</b></font></label>
             <input id="userPw" type="password" placeholder="Enter Password" value=""/>
