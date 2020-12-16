@@ -85,7 +85,7 @@ input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
    
   <form id="login-form"> 
             <label for="email"><font color="white"><b>Email</b></font></label>
-            <input id="userName" type="text" placeholder="Enter Email OR UserName" value=""/>
+            <input id="userName" type="text" placeholder="Enter Email / UserName" value=""/>
             <label for="password"><font color="white"><b>Password</b></font></label>
             <input id="userPw" type="password" placeholder="Enter Password" value=""/>
             <input id="login_btn1" type="button" value="Login" class="btnr" onClick="check()"/>
