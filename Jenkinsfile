@@ -1,7 +1,7 @@
 pipeline{
     agent any
     stages{
-        stage ("Deployment"){
+        stage ("Deploy"){
             steps{
                 ansiblePlaybook installation: 'ansible', inventory: 'localhost', playbook: '/var/jenkins_home/ansible/Deploy.yml'
             }
