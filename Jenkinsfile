@@ -32,7 +32,7 @@ pipeline{
         stage ("Build Docker Image"){
             steps{
                 //ansiblePlaybook installation: 'ansible', inventory: 'localhost', playbook: '/var/jenkins_home/ansible/Build_Image.yml'
-                sh 'docker build -t webapp --no-cache -f /var/jenkins_home/ansible/Dockerfile'
+                sh 'docker build -t webapp /var/jenkins_home/ansible/ --no-cache'
                 echo '*************Image Built Successfully*************'
             }
             
