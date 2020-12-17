@@ -8,6 +8,9 @@ pipeline{
         echo '*************CheckedOut from GitHub Successfully*************'
             }
         }
+        parallel{
+
+        
         stage ("Stop Container"){
             steps{
                 ansiblePlaybook installation: 'ansible', inventory: 'localhost', playbook: '/var/jenkins_home/ansible/Stop_Container.yml'
@@ -21,6 +24,7 @@ pipeline{
                 echo '*************Container has been removed Successfully*************'
             }
             
+        }
         }
         stage ("Remove Docker Image"){
             steps{
