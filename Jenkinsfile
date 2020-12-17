@@ -31,14 +31,16 @@ pipeline{
         }
         stage ("Build Docker Image"){
             steps{
-                ansiblePlaybook installation: 'ansible', inventory: 'localhost', playbook: '/var/jenkins_home/ansible/Build_Image.yml'
+                //ansiblePlaybook installation: 'ansible', inventory: 'localhost', playbook: '/var/jenkins_home/ansible/Build_Image.yml'
+                sh 'docker build -t webapp --no-cache -f /var/jenkins_home/ansible/Dockerfile'
                 echo '*************Image Built Successfully*************'
             }
             
         }
         stage ("Run Docker Container"){
             steps{
-                ansiblePlaybook installation: 'ansible', inventory: 'localhost', playbook: '/var/jenkins_home/ansible/Run_Container.yml'
+                //ansiblePlaybook installation: 'ansible', inventory: 'localhost', playbook: '/var/jenkins_home/ansible/Run_Container.yml'
+                sh 'docker run -d -p 8989:8080 --name workout webapp'
                 echo '*************Container Running Successfully*************'
             }
             
