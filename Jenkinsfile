@@ -1,12 +1,19 @@
 pipeline{
     agent any
     stages{
-
-        stage("Checkout From Github"){
+        
+        stage('Checking Docker Status')
+        {
             steps{
-                git 'https://github.com/iambsp/GroovyTest.git'
-        echo '*************CheckedOut from GitHub Successfully*************'
-            }
+                sh '''#!/bin/bash
+
+                    if docker run hello-world | grep -q 'Hello from Docker!'; then
+                        echo "Docker is Up and Running Fine!"
+                    else
+                        exit 1
+                    fi
+                    '''
+        }
         }
         stage('Cleaning Docker Container')
         {
